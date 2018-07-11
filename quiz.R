@@ -90,5 +90,19 @@ fun3 <- function()
     set.seed(233)
     
     
-    lassoFit <- train(CompressiveStrength ~ ., data = concrete, method = "lasso")
+    lassoFit <- train(CompressiveStrength ~ ., data = training, method = "lasso")
+    
+    plot.enet(lassoFit$finalModel, xvar="penalty")
+}
+
+fun4 <- function()
+{
+    library(lubridate) # For year() function below
+    dat = read.csv("./gaData.csv")
+    
+    training = dat[year(dat$date) < 2012,]
+    testing = dat[(year(dat$date)) > 2011,]
+    tstrain = ts(training$visitsTumblr)
+    
+    library(forecast)
 }
