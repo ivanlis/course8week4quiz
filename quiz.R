@@ -105,4 +105,32 @@ fun4 <- function()
     tstrain = ts(training$visitsTumblr)
     
     library(forecast)
+    
+    model4 <- bats(tstrain)
+    fc <- forecast(model4, h = nrow(testing))
+
+    
+    sum(testing$visitsTumblr >= fc$lower[,2] & testing$visitsTumblr <= fc$upper[, 2]) / nrow(testing)
+}
+
+fun5 <- function()
+{
+    library(caret)
+    
+    set.seed(3523)
+    
+    library(AppliedPredictiveModeling)
+    data(concrete)
+    inTrain = createDataPartition(concrete$CompressiveStrength, p = 3/4)[[1]]
+    training = concrete[ inTrain,]
+    testing = concrete[-inTrain,]
+    
+    library(e1071)
+    set.seed(325)
+    svmModel <- svm(CompressiveStrength ~ ., data = training)
+
+    svmPredict <- predict(svmModel, testing)
+    rmse <- sqrt( sum( (svmPredict - testing$CompressiveStrength) ^ 2 ) / nrow(testing))
+
+    rmse
 }
